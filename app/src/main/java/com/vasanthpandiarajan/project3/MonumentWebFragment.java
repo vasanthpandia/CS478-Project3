@@ -8,16 +8,32 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class MonumentWebFragment extends Fragment {
     private static final String TAG = "MonumentWebFragment";
+    private int mCurrIdx = -1;
+    private int monumentUrlsLen;
 
     WebView monumentView;
 
+    int getLoadedIndex() {
+        return mCurrIdx;
+    }
+
+    void showMonumentAtIndex(int newIndex) {
+        if (newIndex < 0 || newIndex >= monumentUrlsLen)
+            return;
+        mCurrIdx = newIndex;
+        monumentView.loadUrl(MainActivity.monument_urls_list[newIndex]);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.i(TAG, "Entered Web OnCreate()");
         super.onCreate(savedInstanceState);
     }
 
@@ -32,9 +48,10 @@ public class MonumentWebFragment extends Fragment {
         super.onActivityCreated(savedState);
 
         monumentView = (WebView) getActivity().findViewById(R.id.monumentView);
-        monumentView.loadUrl("http://www.google.com");
-//        getActivity().setContentView(monumentView);
-//        monumentView.setText("Hello World");
+        monumentView.setWebViewClient(new WebViewClient());
+
+        monumentUrlsLen = MainActivity.monument_urls_list.length;
+
     }
 
     @Override

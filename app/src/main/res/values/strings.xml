@@ -4,14 +4,21 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string-array name="monuments_list">
-        <item>
-            Bean
-        </item>
-        <item>Millenium Mall</item>
-        <item>John Hancock Center</item>
+        <item>Museum of Science and Industry</item>
+        <item>Millenium Park</item>
+        <item>Wrigley Field</item>
         <item>Willis Tower</item>
-        <item>Lincoln Park</item>
+        <item>Lincoln Park Zoo</item>
         <item>River Walk</item>
         <item>Navy Pier</item>
+    </string-array>
+    <string-array name="monument_urls">
+        <item>http://www.google.com</item>
+        <item>http://www.bing.com</item>
+        <item>http://www.microsoft.com</item>
+        <item>http://www.facebook.com</item>
+        <item>http://www.twitter.com</item>
+        <item>http://www.bbc.co.uk</item>
+        <item>http://www.nytimes.com</item>
     </string-array>
 </resources>

@@ -6,25 +6,25 @@
     android:orientation="vertical"
     android:baselineAligned="false">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar1"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorAccent"
-        android:elevation="4dp"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+    <include layout="@layout/actionbar" />
 
-    <FrameLayout
-        android:id="@+id/monument_list_container"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"></FrameLayout>
+        android:orientation="horizontal">
 
-    <FrameLayout
-        android:id="@+id/monument_web_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="2"></FrameLayout>
+        <FrameLayout
+            android:id="@+id/monument_list_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"></FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/monument_web_container"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"></FrameLayout>
+
+    </LinearLayout>
 
 </LinearLayout>

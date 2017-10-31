@@ -42,7 +42,7 @@ public class MonumentListFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         Log.i(TAG, getClass().getSimpleName() + ":entered onCreate()");
         super.onCreate(savedInstanceState);
-
+        setRetainInstance(true);
     }
 
     @Override

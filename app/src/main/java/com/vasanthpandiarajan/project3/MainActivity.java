@@ -3,6 +3,7 @@ package com.vasanthpandiarajan.project3;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.res.Configuration;
+import android.graphics.drawable.GradientDrawable;
 import android.media.VolumeShaper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,16 +22,19 @@ public class MainActivity extends AppCompatActivity implements MonumentListFragm
     private FrameLayout monumentListFrameLayout, monumentsWebFrameLayout;
     private static final int MATCH_PARENT = LinearLayout.LayoutParams.MATCH_PARENT;
     private static final String TAG = "MainActivity";
+    int config;
 
-    public static String[] monuments_list;
+    public static String[] monuments_list, monument_urls_list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         monuments_list = getResources().getStringArray(R.array.monuments_list);
+        monument_urls_list = getResources().getStringArray(R.array.monument_urls);
 
         setContentView(R.layout.activity_main);
+        config = getResources().getConfiguration().orientation;
 
         Toolbar myToolBar = (Toolbar) findViewById(R.id.toolbar1);
         setSupportActionBar(myToolBar);
@@ -55,15 +59,27 @@ public class MainActivity extends AppCompatActivity implements MonumentListFragm
     }
 
     public void setLayout() {
-        if(!monumentsWeb.isAdded()) {
-            monumentListFrameLayout.setLayoutParams(new LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT));
-            monumentsWebFrameLayout.setLayoutParams(new LinearLayout.LayoutParams(0, MATCH_PARENT));
-            Log.i(TAG, "Web Fragment Not Added");
-        } else {
-            monumentListFrameLayout.setLayoutParams(new LinearLayout.LayoutParams(0, MATCH_PARENT, 1f));
-            monumentsWebFrameLayout.setLayoutParams(new LinearLayout.LayoutParams(0, MATCH_PARENT, 2f));
-            Log.i(TAG, "Web Fragment Added");
+        if(config == Configuration.ORIENTATION_PORTRAIT) {
+            if(!monumentsWeb.isAdded()) {
+                monumentListFrameLayout.setLayoutParams(new LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT));
+                monumentsWebFrameLayout.setLayoutParams(new LinearLayout.LayoutParams(0, MATCH_PARENT));
+                Log.i(TAG, "Web Fragment Not Added");
+            } else {
+                monumentListFrameLayout.setLayoutParams(new LinearLayout.LayoutParams(0, MATCH_PARENT));
+                monumentsWebFrameLayout.setLayoutParams(new LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT));
+            }
+        } else if(config == Configuration.ORIENTATION_LANDSCAPE) {
+            if(!monumentsWeb.isAdded()) {
+                monumentListFrameLayout.setLayoutParams(new LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT));
+                monumentsWebFrameLayout.setLayoutParams(new LinearLayout.LayoutParams(0, MATCH_PARENT));
+                Log.i(TAG, "Web Fragment Not Added");
+            } else {
+                monumentListFrameLayout.setLayoutParams(new LinearLayout.LayoutParams(0, MATCH_PARENT, 1f));
+                monumentsWebFrameLayout.setLayoutParams(new LinearLayout.LayoutParams(0, MATCH_PARENT, 2f));
+                Log.i(TAG, "Web Fragment Added");
+            }
         }
+
     }
 
 //    public void onCreateOption() {
@@ -101,26 +117,41 @@ public class MainActivity extends AppCompatActivity implements MonumentListFragm
     }
 
     public void onListSelection(int position) {
-        if(!monumentsWeb.isAdded()) {
-            FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+        if(config == Configuration.ORIENTATION_PORTRAIT) {
+            if(!monumentsWeb.isAdded()) {
+                FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+                fragmentTransaction.add(R.id.monument_web_container, monumentsWeb);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
 
-            fragmentTransaction.add(R.id.monument_web_container, monumentsWeb);
-            fragmentTransaction.addToBackStack(null);
-            fragmentTransaction.commit();
+                mFragmentManager.executePendingTransactions();
+            }
 
-            mFragmentManager.executePendingTransactions();
+        } else if(config == Configuration.ORIENTATION_LANDSCAPE) {
+            if(!monumentsWeb.isAdded()) {
+                FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+
+                fragmentTransaction.add(R.id.monument_web_container, monumentsWeb);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+
+                mFragmentManager.executePendingTransactions();
+            }
         }
+
+        if(monumentsWeb.getLoadedIndex() != position) {
+            Log.i(TAG, "In Get Loaded Index  : ");
+            monumentsWeb.showMonumentAtIndex(position);
+        }
+
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
-        if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            Toast.makeText(this, "Landscape", Toast.LENGTH_SHORT).show();
-        } else if(newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            Toast.makeText(this, "Portrait", Toast.LENGTH_SHORT).show();
-        }
+        config = newConfig.orientation;
+        setLayout();
     }
 
     @Override
