@@ -3,9 +3,8 @@ package com.vasanthpandiarajan.project3;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.graphics.drawable.GradientDrawable;
-import android.media.VolumeShaper;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -19,9 +18,10 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 import android.app.ActionBar;
 
+
 import static android.support.v4.content.PermissionChecker.PERMISSION_GRANTED;
 
-public class MainActivity extends AppCompatActivity implements MonumentListFragment.ListSelectionListener {
+public class MainActivity extends AppCompatActivity implements MonumentListFragment.ListSelectionListener, ActivityCompat.OnRequestPermissionsResultCallback {
     private MonumentWebFragment monumentsWeb;
     private MonumentListFragment monumentListFragment;
     private FragmentManager mFragmentManager;
@@ -30,6 +30,8 @@ public class MainActivity extends AppCompatActivity implements MonumentListFragm
     private static final String TAG = "MainActivity";
     private static final String TAG_RETAINED_LIST_FRAGMENT = "RetainedListFragment";
     private static final String TAG_RETAINED_WEB_FRAGMENT = "RetainedWebFragment";
+    private final int REQUEST_PERMISSION_DEADLY_STATE=1;
+
     int config;
 
     public static String[] monuments_list, monument_urls_list;
@@ -117,12 +119,16 @@ public class MainActivity extends AppCompatActivity implements MonumentListFragm
 
             case R.id.openb:
                 // Open Gallery is clicked
-                if(ContextCompat.checkSelfPermission(this, "com.vasanthpandiarajan.monumentsgrid.DEADLY_ACTIVITY") != PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(this, "com.vasanthpandiarajan.monumentsgrid.DEADLY_ACTIVITY");
+                if(ContextCompat.checkSelfPermission(this, "com.vasanthpandiarajan.monumentsgrid.permission.DEADLY_ACTIVITY") == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this, "Permission already present", Toast.LENGTH_SHORT).show();
+                    loadGallery();
+
+                } else {
+                    ActivityCompat.requestPermissions(this, new String[]{"com.vasanthpandiarajan.monumentsgrid.permission.DEADLY_ACTIVITY"}, REQUEST_PERMISSION_DEADLY_STATE);
+                    Toast.makeText(this, "Permission Dialog should open now - " + ContextCompat.checkSelfPermission(this, "com.vasanthpandiarajan.monumentsgrid.permission.DEADLY_ACTIVITY"), Toast.LENGTH_SHORT).show();
                 }
-                Intent intent = new Intent();
-                intent.setAction("com.vasanthpandiarajan.monumentsgrid.OPEN_GRID");
-                sendBroadcast(intent, "com.vasanthpandiarajan.monumentsgrid.DEADLY_ACTIVITY");
+
+
                 return true;
 
             default:
@@ -187,6 +193,18 @@ public class MainActivity extends AppCompatActivity implements MonumentListFragm
     protected void onStop() {
         Log.i(TAG, getClass().getSimpleName() + ":entered onStop()");
         super.onStop();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        Toast.makeText(this, "Toast is made", Toast.LENGTH_LONG).show();
+        loadGallery();
+    }
+
+    public void loadGallery() {
+        Intent intent = new Intent();
+        intent.setAction("com.vasanthpandiarajan.monumentsgrid.OPEN_GRID");
+        sendBroadcast(intent);
     }
 
 }
