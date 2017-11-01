@@ -24,6 +24,7 @@ public class MonumentWebFragment extends Fragment {
         return mCurrIdx;
     }
 
+    // Called on ListSelection - loads the url inside webview on select
     void showMonumentAtIndex(int newIndex) {
         if (newIndex < 0 || newIndex >= monumentUrlsLen)
             return;
@@ -35,6 +36,9 @@ public class MonumentWebFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         Log.i(TAG, "Entered Web OnCreate()");
         super.onCreate(savedInstanceState);
+
+        // To retain instance of fragment when configuration is changed
+        setRetainInstance(true);
     }
 
     @Override
@@ -47,10 +51,17 @@ public class MonumentWebFragment extends Fragment {
     public void onActivityCreated(Bundle savedState) {
         super.onActivityCreated(savedState);
 
+        // Get webview from the layout and set as webview client
+
         monumentView = (WebView) getActivity().findViewById(R.id.monumentView);
         monumentView.setWebViewClient(new WebViewClient());
 
         monumentUrlsLen = MainActivity.monument_urls_list.length;
+
+        if(mCurrIdx != -1) {
+            // Load URL at position if current position mCurrIdx value is present.
+            monumentView.loadUrl(MainActivity.monument_urls_list[mCurrIdx]);
+        }
 
     }
 

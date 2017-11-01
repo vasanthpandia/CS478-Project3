@@ -17,14 +17,19 @@ public class MonumentListFragment extends ListFragment {
 
     private ListSelectionListener mListener = null;
     private static final String TAG = "Monument List Fragment";
+    private int mCurrentIndex = -1;
 
     public interface ListSelectionListener {
         public void onListSelection(int index);
     }
 
     public void onListItemClick(ListView l, View v, int pos, long id) {
-        getListView().setItemChecked(pos, true);
-        mListener.onListSelection(pos);
+        if(mCurrentIndex != pos) {
+            mCurrentIndex = pos;
+            mListener.onListSelection(pos);
+        }
+        getListView().setItemChecked(mCurrentIndex, true);
+
     }
 
     public void onAttach(Context activity) {
@@ -61,6 +66,10 @@ public class MonumentListFragment extends ListFragment {
 
         // Make list view to allow only single selection
         getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+
+        if(mCurrentIndex != -1) {
+            getListView().setItemChecked(mCurrentIndex, true);
+        }
     }
 
     @Override

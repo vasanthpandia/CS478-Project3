@@ -13,12 +13,12 @@
         <item>Navy Pier</item>
     </string-array>
     <string-array name="monument_urls">
-        <item>http://www.google.com</item>
-        <item>http://www.bing.com</item>
-        <item>http://www.microsoft.com</item>
-        <item>http://www.facebook.com</item>
-        <item>http://www.twitter.com</item>
-        <item>http://www.bbc.co.uk</item>
-        <item>http://www.nytimes.com</item>
+        <item>https://www.msichicago.org</item>
+        <item>http://millenniumparkfoundation.org/</item>
+        <item>http://www.wrigleyfieldchicagotickets.com/</item>
+        <item>http://www.willistower.com</item>
+        <item>http://www.lpzoo.org/</item>
+        <item>https://www.chicagoriverwalk.us</item>
+        <item>https://navypier.org</item>
     </string-array>
 </resources>
