@@ -2,9 +2,12 @@ package com.vasanthpandiarajan.project3;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.GradientDrawable;
 import android.media.VolumeShaper;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -16,8 +19,11 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 import android.app.ActionBar;
 
+import static android.support.v4.content.PermissionChecker.PERMISSION_GRANTED;
+
 public class MainActivity extends AppCompatActivity implements MonumentListFragment.ListSelectionListener {
     private MonumentWebFragment monumentsWeb;
+    private MonumentListFragment monumentListFragment;
     private FragmentManager mFragmentManager;
     private FrameLayout monumentListFrameLayout, monumentsWebFrameLayout;
     private static final int MATCH_PARENT = LinearLayout.LayoutParams.MATCH_PARENT;
@@ -50,8 +56,9 @@ public class MainActivity extends AppCompatActivity implements MonumentListFragm
 
         // Find fragment with list of monuments - Add to the view
         if(mFragmentManager.findFragmentByTag(TAG_RETAINED_LIST_FRAGMENT) == null) {
+            monumentListFragment = new MonumentListFragment();
             fragmentTransaction = mFragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.monument_list_container, new MonumentListFragment(), TAG_RETAINED_LIST_FRAGMENT);
+            fragmentTransaction.replace(R.id.monument_list_container, monumentListFragment, TAG_RETAINED_LIST_FRAGMENT);
             Log.i(TAG, "Fragment should be added");
             fragmentTransaction.commit();
         }
@@ -94,7 +101,6 @@ public class MainActivity extends AppCompatActivity implements MonumentListFragm
         }
     }
 
-
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.actionbar, menu);
@@ -106,14 +112,17 @@ public class MainActivity extends AppCompatActivity implements MonumentListFragm
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.exiting:
-                // User chose the "Settings" item, show the app settings UI...
-                Toast.makeText(this, "Exiting app", Toast.LENGTH_LONG).show();
+                // Exiting is clicked
                 return true;
 
             case R.id.openb:
-                // User chose the "Favorite" action, mark the current item
-                // as a favorite...
-                Toast.makeText(this, "Opening Gallery...", Toast.LENGTH_LONG).show();
+                // Open Gallery is clicked
+                if(ContextCompat.checkSelfPermission(this, "com.vasanthpandiarajan.monumentsgrid.DEADLY_ACTIVITY") != PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this, "com.vasanthpandiarajan.monumentsgrid.DEADLY_ACTIVITY");
+                }
+                Intent intent = new Intent();
+                intent.setAction("com.vasanthpandiarajan.monumentsgrid.OPEN_GRID");
+                sendBroadcast(intent, "com.vasanthpandiarajan.monumentsgrid.DEADLY_ACTIVITY");
                 return true;
 
             default:
@@ -135,20 +144,13 @@ public class MainActivity extends AppCompatActivity implements MonumentListFragm
             mFragmentManager.executePendingTransactions();
         }
 
+        // Call Method to Load URL in WebView
+
         if(monumentsWeb.getLoadedIndex() != position) {
             Log.i(TAG, "In Get Loaded Index  : ");
             monumentsWeb.showMonumentAtIndex(position);
         }
 
-    }
-
-    protected void getWebViewFragment() {
-        try {
-            monumentsWeb = (MonumentWebFragment) mFragmentManager.findFragmentByTag(TAG_RETAINED_WEB_FRAGMENT);
-        } catch (Exception e) {
-            monumentsWeb = new MonumentWebFragment();
-            Log.e(TAG_RETAINED_WEB_FRAGMENT, "Error");
-        }
     }
 
     @Override
