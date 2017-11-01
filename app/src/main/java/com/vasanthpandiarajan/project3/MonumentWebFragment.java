@@ -55,6 +55,7 @@ public class MonumentWebFragment extends Fragment {
 
         monumentView = (WebView) getActivity().findViewById(R.id.monumentView);
         monumentView.setWebViewClient(new WebViewClient());
+        monumentView.getSettings().setJavaScriptEnabled(true);
 
         monumentUrlsLen = MainActivity.monument_urls_list.length;
 
